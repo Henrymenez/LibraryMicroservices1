@@ -19,6 +19,8 @@ namespace BookService
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             // Add Entity Framework
             builder.Services.AddDbContext<BookDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -27,47 +29,49 @@ namespace BookService
             builder.Services.AddMemoryCache();
 
             // Add Kafka Producer
-            builder.Services.AddSingleton<IKafkaProducer>(provider =>
-            {
-                var config = new ProducerConfig
-                {
-                    BootstrapServers = builder.Configuration.GetConnectionString("Kafka")
-                };
-                return new KafkaProducer(config);
-            });
+            //builder.Services.AddSingleton<IKafkaProducer>(provider =>
+            //{
+            //    var config = new ProducerConfig
+            //    {
+            //        BootstrapServers = builder.Configuration.GetConnectionString("Kafka")
+            //    };
+            //    return new KafkaProducer(config);
+            //});
 
             // Add Kafka Consumers
-            builder.Services.AddHostedService<BorrowEventConsumer>(provider =>
-            {
-                var config = new ConsumerConfig
-                {
-                    BootstrapServers = builder.Configuration.GetConnectionString("Kafka"),
-                    GroupId = "book-service-group",
-                    AutoOffsetReset = AutoOffsetReset.Earliest
-                };
-                var logger = provider.GetRequiredService<ILogger<BorrowEventConsumer>>();
-                return new BorrowEventConsumer(config, provider, logger);
-            });
+            //builder.Services.AddHostedService<BorrowEventConsumer>(provider =>
+            //{
+            //    var config = new ConsumerConfig
+            //    {
+            //        BootstrapServers = builder.Configuration.GetConnectionString("Kafka"),
+            //        GroupId = "book-service-group",
+            //        AutoOffsetReset = AutoOffsetReset.Earliest
+            //    };
+            //    var logger = provider.GetRequiredService<ILogger<BorrowEventConsumer>>();
+            //    return new BorrowEventConsumer(config, provider, logger);
+            //});
 
-            builder.Services.AddHostedService<ReturnEventConsumer>(provider =>
-            {
-                var config = new ConsumerConfig
-                {
-                    BootstrapServers = builder.Configuration.GetConnectionString("Kafka"),
-                    GroupId = "book-service-group",
-                    AutoOffsetReset = AutoOffsetReset.Earliest
-                };
-                var logger = provider.GetRequiredService<ILogger<ReturnEventConsumer>>();
-                return new ReturnEventConsumer(config, provider, logger);
-            });
+            //builder.Services.AddHostedService<ReturnEventConsumer>(provider =>
+            //{
+            //    var config = new ConsumerConfig
+            //    {
+            //        BootstrapServers = builder.Configuration.GetConnectionString("Kafka"),
+            //        GroupId = "book-service-group",
+            //        AutoOffsetReset = AutoOffsetReset.Earliest
+            //    };
+            //    var logger = provider.GetRequiredService<ILogger<ReturnEventConsumer>>();
+            //    return new ReturnEventConsumer(config, provider, logger);
+            //});
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
+            //if (app.Environment.IsDevelopment())
+            //{
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            //    app.MapOpenApi();
+            //}
 
             app.UseHttpsRedirection();
 
@@ -77,11 +81,11 @@ namespace BookService
             app.MapControllers();
 
             // Run database migrations
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<BookDbContext>();
-                context.Database.EnsureCreated();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var context = scope.ServiceProvider.GetRequiredService<BookDbContext>();
+            //    context.Database.EnsureCreated();
+            //}
 
 
             app.Run();

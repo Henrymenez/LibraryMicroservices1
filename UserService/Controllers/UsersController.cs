@@ -30,7 +30,7 @@ namespace UserService.Controllers
                 _logger = logger;
             }
 
-            [HttpGet]
+            [HttpGet("getUsers")]
             public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
             {
                 const string cacheKey = "all_users";
@@ -79,7 +79,7 @@ namespace UserService.Controllers
                 return Ok(user);
             }
 
-            [HttpPost]
+            [HttpPost("createUser")]
             public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto createUserDto)
             {
                 var user = new User

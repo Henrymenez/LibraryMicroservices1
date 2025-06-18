@@ -31,7 +31,7 @@ namespace BookService.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("getBooks")]
         public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
         {
             const string cacheKey = "all_books";
@@ -111,7 +111,7 @@ namespace BookService.Controllers
             return Ok(books);
         }
 
-        [HttpPost]
+        [HttpPost("createBook")]
         public async Task<ActionResult<BookDto>> CreateBook(CreateBookDto createBookDto)
         {
             var book = new Book
