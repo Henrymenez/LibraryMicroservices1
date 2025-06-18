@@ -12,6 +12,22 @@ namespace LibraryApiGateway
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+            builder.Services.AddAuthentication("Bearer")
+                                .AddJwtBearer("Bearer", options =>
+                                {
+                                    options.RequireHttpsMetadata = false;
+                                    options.Authority = "http://localhost:5001"; // Optional: if using Identity Server
+                                    options.TokenValidationParameters = new TokenValidationParameters
+                                    {
+                                        ValidateIssuer = true,
+                                        ValidateAudience = true,
+                                        ValidIssuer = "LibraryGateway",
+                                        ValidAudience = "LibraryUsers",
+                                        IssuerSigningKey = new SymmetricSecurityKey(
+                                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                                    };
+                                });
+
 
             var app = builder.Build();
 

@@ -14,6 +14,7 @@ namespace UserService.Models
         public string Name { get; set; } = string.Empty;
 
         public string Phone { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

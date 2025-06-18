@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using BorrowService.Service.Interfaces;
+using Newtonsoft.Json;
 
 namespace BorrowService.Service.Implementation
 {
-    public class ValidationService
+    public class ValidationService : IValidationService
     {
         private readonly ILogger<ValidationService> _logger;
         private readonly HttpClient _httpClient;
